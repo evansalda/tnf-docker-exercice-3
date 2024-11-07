@@ -47,15 +47,21 @@ Une fois les plugins suggérés installés, re-exécutez la commande `docker exe
     - **Mot de passe** - admin
     - **Nom complet** - admin
     - **Adresse courriel** - admin@admin.com
+
 - Cliquez sur **Sauver et continuer**.
+
 - Dans la page **Configuration de l'instance**, gardez l'URL renseignée dans le champ **URL de Jenkins** et cliquez sur **Sauver et terminer** pour terminer la configuration de jenkins.
+
 - Cliquez enfin sur **Commencer à utiliser Jenkins**. Vous tomberez ensuite sur la page d'accueil de Jenkins.
 
 ### Etape 5
 
 - Arrêtez le conteneur en appuyant sur **CTRL+C** depuis le terminal qui l'a lancé ou en tapant la commande `docker stop {ID-du-conteneur}` depuis une autre fenêtre de terminal
+
 - Utilisez la commande **docker rm** pour supprimer définitivement ce même conteneur (n'oubliez-pas d'utiliser `docker ps -a` pour vous rappeler de son ID)
+
 - Reproduisez les étapes 1 et 2 et notez que le répertoire /var/jenkins_home/plugins du conteneur est une nouvelle fois vide
+
 - Accédez à l'application via l'URL **http://localhost:8080** et notez que vous tombez sur la page d'initialisation de Jenkins
 
 Nous venons de montrer qu'il n'existe aucune persistence de données au niveau des conteneurs.
@@ -94,6 +100,7 @@ Arrêtez et supprimez le conteneur (**docker stop** puis **docker rm**).
 ### Etape 5
 
 - Re-exécutez la commande `docker run --name jenkins-container -p 8080:8080 --mount type=bind,source={chemin-vers-répertoire-jenkins-data},target=/var/jenkins_home/ jenkins/jenkins`
+
 - Accédez à l'application via l'URL **http://localhost:8080** :
 
 ![jenkins homepage](./img/jenkins-homepage.png)
@@ -109,11 +116,28 @@ Arrêtez et supprimez le conteneur.
 ## 3. Volume-mounting
 
 - Exécutez la commande `docker volume create mon-premier-volume` pour créer un volume nommé mon-premier-volume
+
+- Exécutez la commande `docker volume ls` et notez la présence du volume que vous venez de créer :
+
+![volume create & ls](./img/volume-create.png)
+
+- Exécutez la commande `docker volume inspect mon-premier-volume` :
+
+![volume inspect](./img/volume-inspect.png)
+
+Notez l'emplacement (Mountpoint) dans lequel Docker stocke les données du volume.
+
 - Exécutez la commande `docker run --name jenkins-container -p 8080:8080 --mount type=volume,source=mon-premier-volume,target=/var/jenkins_home/ jenkins/jenkins`
+
 - Configurez Jenkins comme lors des parties [1](#1-observations) et [2](#2-bind-mounting) jusqu'à atteindre la page d'accueil
+
 - Arrêtez et supprimez le conteneur
+
 - Re-exécutez la commande `docker run --name jenkins-container -p 8080:8080 --mount type=volume,source=mon-premier-volume,target=/var/jenkins_home/ jenkins/jenkins` pour en lancer un nouveau
+
 - Notez que Jenkins est configuré et prêt à être utilisé.
+
+- Arrêtez et supprimez le conteneur
 
 ## 4. Les variables d'environnement
 
@@ -130,6 +154,7 @@ La liste complète et les détails associés sont disponibles sur la page dédi�
 ### Etape 1
 
 - Exécutez la commande `docker run --name db-server -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin123 -e POSTGRES_DB=myfirstdb -p 8080:8080 postgres`
+
 - Exécutez ensuite la commande `docker exec -it db-server psql -h localhost -U admin -d myfirstdb`
     - **psql** - Utilitaire de ligne de commande pour intéragir avec un serveur PostgreSQL
     - **-h localhost** - Désigne que l'on se connecte à **localhost** (le conteneur)
@@ -142,4 +167,4 @@ La connexion fonctionne, ce qui démontre que les variables d'environnement ont 
 
 ### Etape 2
 
-Arrêtez et supprimez le conteneur.
+Arrêtez et supprimez le conteneur. Vous pouvez utilisez la commande `docker rm -f {ID-du-conteneur}` plutôt que successivement docker stop puis docker rm.
