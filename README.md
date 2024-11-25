@@ -64,6 +64,8 @@ Une fois les plugins suggérés installés, re-exécutez la commande `docker exe
 
 - Accédez à l'application via l'URL **http://localhost:8080** et notez que vous tombez sur la page d'initialisation de Jenkins
 
+- Arrêtez et supprimez le conteneur
+
 Nous venons de montrer qu'il n'existe aucune persistence de données au niveau des conteneurs.
 
 ## 2. Bind-mounting
